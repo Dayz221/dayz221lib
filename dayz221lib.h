@@ -78,3 +78,11 @@ public:
     PID(float* input, float* output, float* setpoint, float kp, float ki, float kd, float dt, float minOut, float maxOut);
     void compute();
 };
+
+
+class Timer {
+private:
+    uint32_t last;
+public:
+    bool get(uint32_t delta);
+};

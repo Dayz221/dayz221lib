@@ -153,3 +153,12 @@ void PID::compute() {
     prev_i = i;
     prev_err = p;
 }
+
+
+bool Timer::get(uint32_t delta) {
+    if (millis() - last >= delta) {
+        last = millis();
+        return true;
+    }
+    return false;
+}
