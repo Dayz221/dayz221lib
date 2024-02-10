@@ -129,3 +129,27 @@ void LineSensors::getArray(bool* arr) {
         arr[i] = (*sensors[i]).get();
     }
 }
+
+
+PID::PID(float* input, float* output, float* setpoint, float kp, float ki, float kd, float dt, float minOut, float maxOut) {
+    this->input = input;
+    this->output = output;
+    this->setpoint = setpoint;
+    this->kp = kp;
+    this->ki = ki;
+    this->kd = kd;
+    this->dt = dt;
+    this->minOut = minOut;
+    this->maxOut = maxOut;
+}
+
+void PID::compute() {
+    float _input = (*input);
+    float _setpoint = (*setpoint);
+    float p = _setpoint - _input;
+    float i = max(minOut, min(maxOut, i + p*(dt/1000)*ki));
+    float d = (p-prev_err)/(dt/1000);
+    (*output) = max(minOut, min(maxOut, p*kp + i + d*kd));
+    prev_i = i;
+    prev_err = p;
+}

@@ -63,3 +63,18 @@ public:
     int getBin();
     void getArray(bool* arr);
 };
+
+
+class PID {
+private:
+    float kp, ki, kd, minOut, maxOut;
+    float prev_i, prev_err;
+    float *input;
+    float *output;
+    float *setpoint;
+    float dt;
+
+public:
+    PID(float* input, float* output, float* setpoint, float kp, float ki, float kd, float dt, float minOut, float maxOut);
+    void compute();
+};
