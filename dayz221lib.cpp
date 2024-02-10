@@ -42,9 +42,12 @@ void Motor::setSpeed(int speed) {
 }
 
 
-NikiMotors::NikiMotors(Motor* leftMotor, Motor* rightMotor) {
+NikiMotors::NikiMotors(Motor* leftMotor, Motor* rightMotor, int initialSpeed = 100, uint32_t timeOfOneRotate = 1000) {
     this->leftMotor = leftMotor;
     this->rightMotor = rightMotor;
+    this->initialSpeed = initialSpeed;
+
+    this->setTimeOfOneRotate(timeOfOneRotate);
 }
 
 void NikiMotors::setTimeOfOneRotate(uint32_t time) {
@@ -66,8 +69,10 @@ void NikiMotors::stop() {
     (*rightMotor).setSpeed(0);
 }
 
-void NikiMotors::rotate(int speed, int degs) {
-    uint32_t time_of_rotate = ((float)degs/360.0)*timeOfOneRotate;
+void NikiMotors::rotate(int degs, int speed = 0) {
+    this->stop();
+    if (speed == 0) speed = initialSpeed;
+    uint32_t time_of_rotate = ((float)degs/360.0)*((float)initialSpeed/speed)*timeOfOneRotate;
     uint32_t timer = millis();
     this->move(-speed, speed);
     while (millis() - timer < time_of_rotate);

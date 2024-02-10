@@ -24,13 +24,14 @@ private:
     Motor* leftMotor;
     Motor* rightMotor;
     uint32_t timeOfOneRotate;
+    int initialSpeed;
 public:
-    NikiMotors(Motor* leftMotor, Motor* rightMotor);
+    NikiMotors(Motor* leftMotor, Motor* rightMotor, int initialSpeed = 100, uint32_t timeOfOneRotate = 1000);
     void setTimeOfOneRotate(uint32_t time);
+    void rotate(int degs, int speed = 0);
     void move(int leftSpeed, int rightSpeed);
     void move(int speed);
     void stop();
-    void rotate(int speed, int degs);
 };
 
 
