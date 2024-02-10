@@ -59,6 +59,6 @@ private:
 
 public:
     LineSensors(int count, int* pins);
-    int getInt();
+    int getBin();
     void getArray(bool* arr);
 };

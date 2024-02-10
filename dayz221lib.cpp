@@ -111,7 +111,7 @@ LineSensors::LineSensors(int count, int* pins) {
     }
 }
 
-int LineSensors::getInt() {
+int LineSensors::getBin() {
     int num = 0;
     for (int i = 0; i < count; i++) {
         num += (*sensors[i]).get() << i;
