@@ -88,6 +88,7 @@ private:
 public:
     LineFollower(NikiMotors* motors, LineSensors* sensors);
     void follow(int speed);
+    void stop();
 };
 
 

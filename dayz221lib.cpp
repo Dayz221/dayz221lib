@@ -173,6 +173,10 @@ void LineFollower::follow(int speed) {
     motors->move((int)((float)speed*(1-err)), (int)((float)speed*(1+err)));
 }
 
+void LineFollower::stop() {
+    motors->stop();
+}
+
 
 PID::PID(float* input, float* output, float* setpoint, float kp, float ki, float kd, float dt, float minOut, float maxOut) {
     this->input = input;
