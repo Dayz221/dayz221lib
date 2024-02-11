@@ -55,18 +55,18 @@ void NikiMotors::setTimeOfOneRotate(uint32_t time) {
 }
 
 void NikiMotors::move(int leftSpeed, int rightSpeed) {
-    (*leftMotor).setSpeed(leftSpeed);
-    (*rightMotor).setSpeed(rightSpeed);
+    leftMotor->setSpeed(leftSpeed);
+    rightMotor->setSpeed(rightSpeed);
 }
 
 void NikiMotors::move(int speed) {
-    (*leftMotor).setSpeed(speed);
-    (*rightMotor).setSpeed(speed);
+    leftMotor->setSpeed(speed);
+    rightMotor->setSpeed(speed);
 }
 
 void NikiMotors::stop() {
-    (*leftMotor).setSpeed(0);
-    (*rightMotor).setSpeed(0);
+    leftMotor->setSpeed(0);
+    rightMotor->setSpeed(0);
 }
 
 void NikiMotors::rotate(int degs, int speed = 0) {
