@@ -44,27 +44,6 @@ public:
 };
 
 
-class LineSensor {
-private:
-    int pin;
-public:
-    LineSensor(int pin);
-    bool get();
-};
-
-
-class LineSensors {
-private:
-    int count;
-    LineSensor** sensors;
-
-public:
-    LineSensors(int count, int* pins);
-    int getBin();
-    void getArray(bool* arr);
-};
-
-
 class PID {
 private:
     float kp, ki, kd, minOut, maxOut;
@@ -77,6 +56,38 @@ private:
 public:
     PID(float* input, float* output, float* setpoint, float kp, float ki, float kd, float dt, float minOut, float maxOut);
     void compute();
+};
+
+
+class LineSensor {
+private:
+    int pin;
+public:
+    LineSensor(int pin);
+    bool get();
+};
+
+class LineSensors {
+private:
+    int count;
+    LineSensor** sensors;
+
+public:
+    LineSensors(int leftSensor, int rightSensor);
+    LineSensors(int count, int* pins);
+    int getBin();
+    void getArray(bool* arr);
+    float getError();
+};
+
+class LineFollower {
+private:
+    NikiMotors* motors;
+    LineSensors* sensors;
+
+public:
+    LineFollower(NikiMotors* motors, LineSensors* sensors);
+    void follow(int speed);
 };
 
 

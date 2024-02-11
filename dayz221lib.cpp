@@ -116,6 +116,13 @@ LineSensors::LineSensors(int count, int* pins) {
     }
 }
 
+LineSensors::LineSensors(const int leftSensor, const int rightSensor) {
+    this->count = 2;
+    this->sensors = new LineSensor*[2];
+    sensors[0] = &LineSensor(leftSensor);
+    sensors[1] = &LineSensor(rightSensor);
+}
+
 int LineSensors::getBin() {
     int num = 0;
     for (int i = 0; i < count; i++) {
@@ -128,6 +135,42 @@ void LineSensors::getArray(bool* arr) {
     for (int i = 0; i < count; i++) {
         arr[i] = (*sensors[i]).get();
     }
+}
+
+float LineSensors::getError() {
+    float delta = 1.0/(count-1);
+    int cur = this->getBin();
+    float answ = 0;
+    switch (cur) {
+        case 0b00000001: answ = -1;
+        case 0b00000011: answ = -1 + delta;
+        case 0b00000010: answ = -1 + delta*2;
+        case 0b00000110: answ = -1 + delta*3;
+        case 0b00000100: answ = -1 + delta*4;
+        case 0b00001100: answ = -1 + delta*5;
+        case 0b00001000: answ = -1 + delta*6;
+        case 0b00011000: answ = -1 + delta*7;
+        case 0b00010000: answ = -1 + delta*8;
+        case 0b00110000: answ = -1 + delta*9;
+        case 0b00100000: answ = -1 + delta*10;
+        case 0b01100000: answ = -1 + delta*11;
+        case 0b01000000: answ = -1 + delta*12;
+        case 0b11000000: answ = -1 + delta*13;
+        case 0b10000000: answ = -1 + delta*14;
+        default: answ = -2; 
+    };
+    return answ;
+}
+
+LineFollower::LineFollower(NikiMotors* motors, LineSensors* sensors) {
+    this->motors = motors;
+    this->sensors = sensors;
+}
+
+void LineFollower::follow(int speed) {
+    float err = sensors->getError();
+    if (err == -2) return motors->stop();
+    motors->move((int)((float)speed*(1-err)), (int)((float)speed*(1+err)));
 }
 
 
@@ -147,7 +190,7 @@ void PID::compute() {
     float _input = (*input);
     float _setpoint = (*setpoint);
     float p = _setpoint - _input;
-    float i = max(minOut, min(maxOut, i + p*(dt/1000)*ki));
+    float i = max(minOut, min(maxOut, prev_i + p*(dt/1000)*ki));
     float d = (p-prev_err)/(dt/1000);
     (*output) = max(minOut, min(maxOut, p*kp + i + d*kd));
     prev_i = i;
