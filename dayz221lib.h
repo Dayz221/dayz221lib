@@ -44,21 +44,6 @@ public:
 };
 
 
-class PID {
-private:
-    float kp, ki, kd, minOut, maxOut;
-    float prev_i, prev_err;
-    float *input;
-    float *output;
-    float *setpoint;
-    float dt;
-
-public:
-    PID(float* input, float* output, float* setpoint, float kp, float ki, float kd, float dt, float minOut, float maxOut);
-    void compute();
-};
-
-
 class LineSensor {
 private:
     int pin;
@@ -98,4 +83,19 @@ private:
     uint32_t last;
 public:
     bool get(uint32_t delta);
+};
+
+
+class PID {
+private:
+    float kp, ki, kd, minOut, maxOut;
+    float prev_i, prev_err;
+    float *input;
+    float *output;
+    float *setpoint;
+    float dt;
+
+public:
+    PID(float* input, float* output, float* setpoint, float kp, float ki, float kd, float dt, float minOut, float maxOut);
+    void compute();
 };
