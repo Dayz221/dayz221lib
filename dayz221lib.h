@@ -66,6 +66,7 @@ public:
     void debug();
 };
 
+// экспериментальный класс, лучше не использовать
 class LineFollower {
 private:
     NikiMotors* motors;
