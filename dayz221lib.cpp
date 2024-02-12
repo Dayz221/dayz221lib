@@ -173,6 +173,7 @@ void LineSensors::debug() {
     Serial.println();
     Serial.print("Error: ");
     Serial.println(this->getError());
+    Serial.println("");
 }
 
 LineFollower::LineFollower(NikiMotors* motors, LineSensors* sensors) {
