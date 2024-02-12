@@ -183,8 +183,8 @@ LineFollower::LineFollower(NikiMotors* motors, LineSensors* sensors) {
 
 void LineFollower::follow(int speed, float k = 1.0) {
     float err = sensors->getError();
-    if (err == -2) return motors->stop();
-    motors->move((int)((float)speed*(1-err*k)), (int)((float)speed*(1+err*k)));
+    if (err == -2) motors->stop();
+    else motors->move((int)((float)speed*(1-err*k)), (int)((float)speed*(1+err*k)));
 }
 
 void LineFollower::stop() {
