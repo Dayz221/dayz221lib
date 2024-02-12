@@ -1,10 +1,10 @@
 #include <Arduino.h>
 
 
-#define left_pwm 7
-#define left_dir 6
-#define right_pwm 4
-#define right_dir 5
+#define left_pwm 6
+#define left_dir 7
+#define right_pwm 5
+#define right_dir 4
 
 
 class Motor {
@@ -78,6 +78,7 @@ public:
     int getBin();
     void getArray(bool* arr);
     float getError();
+    void debug();
 };
 
 class LineFollower {
@@ -87,7 +88,7 @@ private:
 
 public:
     LineFollower(NikiMotors* motors, LineSensors* sensors);
-    void follow(int speed);
+    void follow(int speed, float k = 1.0);
     void stop();
 };
 

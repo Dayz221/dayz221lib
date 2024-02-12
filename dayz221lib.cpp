@@ -112,15 +112,15 @@ LineSensors::LineSensors(int count, int* pins) {
     this->count = count;
     this->sensors = new LineSensor*[count];
     for (int i = 0; i < count; i++) {
-        sensors[i] = &LineSensor(pins[i]);
+        sensors[i] = new LineSensor(pins[i]);
     }
 }
 
 LineSensors::LineSensors(const int leftSensor, const int rightSensor) {
     this->count = 2;
     this->sensors = new LineSensor*[2];
-    sensors[0] = &LineSensor(leftSensor);
-    sensors[1] = &LineSensor(rightSensor);
+    sensors[0] = new LineSensor(leftSensor);
+    sensors[1] = new LineSensor(rightSensor);
 }
 
 int LineSensors::getBin() {
@@ -162,15 +162,28 @@ float LineSensors::getError() {
     return answ;
 }
 
+void LineSensors::debug() {
+    Serial.print("Sensors: ");
+    bool arr[count];
+    this->getArray(arr);
+    for (auto a : arr) {
+        Serial.print(a);
+        Serial.print(" ");
+    }
+    Serial.println();
+    Serial.print("Error: ");
+    Serial.println(this->getError());
+}
+
 LineFollower::LineFollower(NikiMotors* motors, LineSensors* sensors) {
     this->motors = motors;
     this->sensors = sensors;
 }
 
-void LineFollower::follow(int speed) {
+void LineFollower::follow(int speed, float k = 1.0) {
     float err = sensors->getError();
     if (err == -2) return motors->stop();
-    motors->move((int)((float)speed*(1-err)), (int)((float)speed*(1+err)));
+    motors->move((int)((float)speed*(1-err*k)), (int)((float)speed*(1+err*k)));
 }
 
 void LineFollower::stop() {

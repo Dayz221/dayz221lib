@@ -1,8 +1,8 @@
 #include "dayz221lib.h"
 #include <Arduino.h>
 
-Motor leftMotor(0);     // инициализация левого мотора
-Motor rightMotor(1);    // инициализация правого мотора
+Motor leftMotor(false);     // инициализация левого мотора
+Motor rightMotor(true);    // инициализация правого мотора
 NikiMotors motors(&leftMotor, &rightMotor, 200, 3000);   // указатели на левый и правый моторы, начальная скорость моторов, время одного оборота (НА СКОРОСТИ 200!!!!)
 
 void setup() {
