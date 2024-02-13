@@ -227,15 +227,31 @@ void LineFollower::follow(int speed, float k = 1.0) {
 }
 
 void LineFollower::followUntilCrossroad(int speed) {
-    int initial_motor_speed = spe;
-    int delta_power[4] = {8, 18, 32, 38};
+    float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
     int error = this->sensors->getError4();
      
     while(error != 5){
         if (error > 0) {
-            this->motors->move(speed+delta_power[error-1], speed-delta_power[error-1]);
+            this->motors->move((1.0+delta_power[error-1])*speed, (1.0-delta_power[error-1])*speed);
         } else if (error < 0) {
-            this->motors->move(speed-delta_power[(-error)-1], speed+delta_power[(-error)-1]);
+            this->motors->move((1.0-delta_power[-error-1])*speed, (1.0+delta_power[-error-1])*speed);
+        } else {
+            this->motors->move(speed);
+        }
+
+        error = getError();
+    }
+}
+
+void LineFollower::followUntilLineEnd(int speed) {
+    float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
+    int error = this->sensors->getError4();
+     
+    while(error != -4 && error != 4){
+        if (error > 0) {
+            this->motors->move((1.0+delta_power[error-1])*speed, (1.0-delta_power[error-1])*speed);
+        } else if (error < 0) {
+            this->motors->move((1.0-delta_power[-error-1])*speed, (1.0+delta_power[-error-1])*speed);
         } else {
             this->motors->move(speed);
         }
