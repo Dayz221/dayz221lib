@@ -162,7 +162,7 @@ float LineSensors::getError() {
     return answ;
 }
 
-void LineSensors::getError4() {
+int LineSensors::getError4() {
     bool sensor_state[4];
     int error = 0;
 
@@ -234,7 +234,7 @@ void LineFollower::followUntilCrossroad(int speed) {
         if (error > 0) {
             this->motors->move((1.0+delta_power[error-1])*speed, (1.0-delta_power[error-1])*speed);
         } else if (error < 0) {
-            this->motors->move((1.0-delta_power[-error-1])*speed, (1.0+delta_power[-error-1])*speed);
+            this->motors->move((1.0-delta_power[(-error)-1])*speed, (1.0+delta_power[(-error)-1])*speed);
         } else {
             this->motors->move(speed);
         }
@@ -251,7 +251,7 @@ void LineFollower::followUntilLineEnd(int speed) {
         if (error > 0) {
             this->motors->move((1.0+delta_power[error-1])*speed, (1.0-delta_power[error-1])*speed);
         } else if (error < 0) {
-            this->motors->move((1.0-delta_power[-error-1])*speed, (1.0+delta_power[-error-1])*speed);
+            this->motors->move((1.0-delta_power[(-error)-1])*speed, (1.0+delta_power[(-error)-1])*speed);
         } else {
             this->motors->move(speed);
         }

@@ -63,7 +63,7 @@ public:
     int getBin();
     void getArray(bool* arr);
     float getError();
-    float getError4();
+    int getError4();
     void debug();
 };
 
