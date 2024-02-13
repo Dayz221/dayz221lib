@@ -54,7 +54,7 @@ public:
 
 class LineSensors {
 private:
-    int count;
+    int count, last_err;
     LineSensor** sensors;
 
 public:
@@ -63,10 +63,11 @@ public:
     int getBin();
     void getArray(bool* arr);
     float getError();
+    float getError4();
     void debug();
 };
 
-// экспериментальный класс, лучше не использовать
+
 class LineFollower {
 private:
     NikiMotors* motors;
@@ -75,6 +76,8 @@ private:
 public:
     LineFollower(NikiMotors* motors, LineSensors* sensors);
     void follow(int speed, float k = 1.0);
+    void followUntilLineEnd(int speed);
+    void followUntilCrossroad(int speed);
     void stop();
 };
 
