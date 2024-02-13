@@ -69,14 +69,31 @@ void NikiMotors::stop() {
     rightMotor->setSpeed(0);
 }
 
-void NikiMotors::rotate(int degs, int speed = 0) {
+void NikiMotors::moveMilliseconds(int leftSpeed, int rightSpeed, uint32_t time) {
     this->stop();
-    if (speed == 0) speed = initialSpeed;
-    uint32_t time_of_rotate = ((float)degs/360.0)*((float)initialSpeed/speed)*timeOfOneRotate;
     uint32_t timer = millis();
-    this->move(-speed, speed);
-    while (millis() - timer < time_of_rotate);
+    this->move(leftSpeed, rightSpeed);
+    while (millis() - timer < time);
     this->stop();
+}
+
+void NikiMotors::moveMilliseconds(int speed, uint32_t time) {
+    this->moveMilliseconds(speed, speed, time);
+}
+
+void NikiMotors::rotate(int degs, int speed = 0) {
+    if (speed == 0) speed = initialSpeed;
+    uint32_t time_of_rotate = ((float)abs(degs)/360.0)*((float)initialSpeed/speed)*timeOfOneRotate;
+    if (degs > 0) this->moveMilliseconds(-speed, speed, time_of_rotate);
+    else this->moveMilliseconds(speed, -speed, time_of_rotate);
+}
+
+Motor NikiMotors::operator[] (int id) {
+    if (id == 0) {
+        return *leftMotor;
+    } else {
+        return *rightMotor;
+    }
 }
 
 
@@ -215,6 +232,11 @@ void LineSensors::debug() {
     Serial.println("");
 }
 
+LineSensor* LineSensors::operator[] (int id) {
+    return sensors[id];
+}
+
+
 LineFollower::LineFollower(NikiMotors* motors, LineSensors* sensors) {
     this->motors = motors;
     this->sensors = sensors;
@@ -232,15 +254,16 @@ void LineFollower::followUntilCrossroad(int speed) {
      
     while(error != 5){
         if (error > 0) {
-            this->motors->move((1.0+delta_power[error-1])*speed, (1.0-delta_power[error-1])*speed);
+            this->motors->move((1.0-delta_power[error-1])*speed, (1.0+delta_power[error-1])*speed);
         } else if (error < 0) {
-            this->motors->move((1.0-delta_power[(-error)-1])*speed, (1.0+delta_power[(-error)-1])*speed);
+            this->motors->move((1.0+delta_power[(-error)-1])*speed, (1.0-delta_power[(-error)-1])*speed);
         } else {
             this->motors->move(speed);
         }
 
         error = this->sensors->getError4();
     }
+    this->motors->moveMilliseconds(speed, 500);
 }
 
 void LineFollower::followUntilLineEnd(int speed) {
@@ -249,19 +272,48 @@ void LineFollower::followUntilLineEnd(int speed) {
      
     while(error != -4 && error != 4){
         if (error > 0) {
-            this->motors->move((1.0+delta_power[error-1])*speed, (1.0-delta_power[error-1])*speed);
+            this->motors->move((1.0-delta_power[error-1])*speed, (1.0+delta_power[error-1])*speed);
         } else if (error < 0) {
-            this->motors->move((1.0-delta_power[(-error)-1])*speed, (1.0+delta_power[(-error)-1])*speed);
+            this->motors->move((1.0+delta_power[(-error)-1])*speed, (1.0-delta_power[(-error)-1])*speed);
         } else {
             this->motors->move(speed);
         }
 
         error = this->sensors->getError4();
     }
+    this->motors->moveMilliseconds(speed, 500);
 }
 
 void LineFollower::stop() {
     motors->stop();
+}
+
+void LineFollower::lineCalibrate(int cnt0) {
+    static uint32_t time = millis();
+    uint32_t timeOfOneRotate = 0;
+    this->motors->move(-this->motors->initialSpeed, this->motors->initialSpeed);
+
+    time = millis();
+    int cnt = 0;
+    static int state = 0;
+    while (true) {
+        int data = this->sensors->getBin();
+        if (state == 0 && data == 0b0110) {
+            state = 1;
+        } else if (state == 1 && (data == 0 || cnt == cnt0)) {
+            cnt++;
+            state=0;
+        }
+        if (cnt == cnt0+1) break;
+    }
+    timeOfOneRotate = millis() - time;
+
+    this->motors->stop();
+    this->motors->setTimeOfOneRotate(timeOfOneRotate);
+}
+
+void LineFollower::objectCalibrate() {
+
 }
 
 

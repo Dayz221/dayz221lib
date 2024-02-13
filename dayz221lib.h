@@ -24,14 +24,17 @@ private:
     Motor* leftMotor;
     Motor* rightMotor;
     uint32_t timeOfOneRotate;
-    int initialSpeed;
 public:
+    int initialSpeed;
     NikiMotors(Motor* leftMotor, Motor* rightMotor, int initialSpeed = 100, uint32_t timeOfOneRotate = 1000);
     void setTimeOfOneRotate(uint32_t time);
     void rotate(int degs, int speed = 0);
+    void moveMilliseconds(int speed, uint32_t time);
+    void moveMilliseconds(int leftSpeed, int rightSpeed, uint32_t time);
     void move(int leftSpeed, int rightSpeed);
     void move(int speed);
     void stop();
+    Motor operator[] (int id);
 };
 
 
@@ -54,10 +57,11 @@ public:
 
 class LineSensors {
 private:
-    int count, last_err;
+    int last_err;
     LineSensor** sensors;
 
 public:
+    int count;
     LineSensors(int leftSensor, int rightSensor);
     LineSensors(int count, int* pins);
     int getBin();
@@ -65,6 +69,7 @@ public:
     float getError();
     int getError4();
     void debug();
+    LineSensor* operator[] (int id);
 };
 
 
@@ -78,6 +83,8 @@ public:
     void follow(int speed, float k = 1.0);
     void followUntilLineEnd(int speed);
     void followUntilCrossroad(int speed);
+    void lineCalibrate(int angle);
+    void objectCalibrate();
     void stop();
 };
 
