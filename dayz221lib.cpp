@@ -239,7 +239,7 @@ void LineFollower::followUntilCrossroad(int speed) {
             this->motors->move(speed);
         }
 
-        error = getError();
+        error = this->sensors->getError4();
     }
 }
 
@@ -256,7 +256,7 @@ void LineFollower::followUntilLineEnd(int speed) {
             this->motors->move(speed);
         }
 
-        error = getError();
+        error = this->sensors->getError4();
     }
 }
 
