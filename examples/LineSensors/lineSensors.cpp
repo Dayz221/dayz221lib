@@ -1,32 +1,33 @@
-#include "dayz221lib.h"
 #include <Arduino.h>
+#include "dayz221lib.h"
 
-int lineSensorsPins[4] = {8, 9, 11, 12};
-LineSensors sensors(4, lineSensorsPins);
+
+int pins[] = {9, 3, 10, 11};
+LineSensors sensors(4, pins);
+
 
 void setup() {
-    Serial.begin(9600);
+
 }
 
+
 void loop() {
-    int bin = sensors.getBin();         // получить двоичное число, где каждый бит - показания датчика (пример: 0b0011 - линия на 3 и 4 датчиках)
-    Serial.println(bin);   
-    
-    switch (bin) {                      // пример обработки данных с датчиков 1 способом
-        case 0b0001: /* обработка события */ break;
-        case 0b0011: /* обработка события */ break;
-        case 0b0010: /* обработка события */ break;
-        case 0b0110: /* обработка события */ break;
-        case 0b0100: /* обработка события */ break;
-        case 0b1100: /* обработка события */ break;
-        case 0b1000: /* обработка события */ break;
+    bool arr[4];
+    sensors.getArray(arr);          // получить данные с датчиков в массив типа bool
+
+    int data = sensors.getBin();    // получить данные с датчиков в виде числа, где каждый бит - значение датчика
+    switch (data) {                 // пример обработки данных из числа
+        case 0b0001: /* обработка */ break; 
+        case 0b0011: /* обработка */ break;
+        case 0b0111: /* обработка */ break;
+        case 0b1111: /* обработка */ break;
     }
 
-    bool values[4];
-    sensors.getArray(values);           // записать показания с датчиков в массив (лучше использовать 1 метод)
-    for (auto a : values) {
-        Serial.print(a);
-        Serial.print(" ");
-    }
-    Serial.println("\n");
+    sensors.debug();                // отладка данных с сенсоров (обязательно провести проверку в начале, чтобы проверить правильность подключения сенсоров)
+    
+    // нижние функции использовать не нужно, вы все равно не поймете зачем они нужны
+    sensors.getError();             // функция для следования по линии (для всех случаев, не всегда хорошо работает)
+    sensors.getError4();            // функция для следования по линии (для 4-х датчиков, хорошо отлажена)
+
+    delay(100);
 }

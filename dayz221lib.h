@@ -83,8 +83,9 @@ public:
     void follow(int speed, float k = 1.0);
     void followUntilLineEnd(int speed);
     void followUntilCrossroad(int speed);
+    // void rotateUntilLine(int speed);
     void lineCalibrate(int angle);
-    void objectCalibrate();
+    // void objectCalibrate();
     void stop();
 };
 

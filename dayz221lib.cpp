@@ -298,7 +298,7 @@ void LineFollower::lineCalibrate(int cnt0) {
     static int state = 0;
     while (true) {
         int data = this->sensors->getBin();
-        if (state == 0 && data == 0b0110) {
+        if (state == 0 && ((data == 0b0110 && this->sensors->count == 4) || (data == 0b11 && this->sensors->count == 2))) {
             state = 1;
         } else if (state == 1 && (data == 0 || cnt == cnt0)) {
             cnt++;
@@ -310,10 +310,6 @@ void LineFollower::lineCalibrate(int cnt0) {
 
     this->motors->stop();
     this->motors->setTimeOfOneRotate(timeOfOneRotate);
-}
-
-void LineFollower::objectCalibrate() {
-
 }
 
 
