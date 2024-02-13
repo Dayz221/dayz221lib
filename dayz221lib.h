@@ -34,7 +34,7 @@ public:
     void move(int leftSpeed, int rightSpeed);
     void move(int speed);
     void stop();
-    Motor operator[] (int id);
+    Motor* operator[] (int id);
 };
 
 

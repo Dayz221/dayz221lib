@@ -88,11 +88,11 @@ void NikiMotors::rotate(int degs, int speed = 0) {
     else this->moveMilliseconds(speed, -speed, time_of_rotate);
 }
 
-Motor NikiMotors::operator[] (int id) {
+Motor* NikiMotors::operator[] (int id) {
     if (id == 0) {
-        return *leftMotor;
+        return leftMotor;
     } else {
-        return *rightMotor;
+        return rightMotor;
     }
 }
 
