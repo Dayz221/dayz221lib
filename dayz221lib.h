@@ -69,6 +69,7 @@ public:
     float getError();
     int getError4();
     void debug();
+    int getCount();
     LineSensor* operator[] (int id);
 };
 
@@ -83,10 +84,26 @@ public:
     void follow(int speed, float k = 1.0);
     void followUntilLineEnd(int speed, uint32_t deltaTime = 0);
     void followUntilCrossroad(int speed, uint32_t deltaTime = 0);
-    // void rotateUntilLine(int speed);
-    void lineCalibrate(int angle);
+    void followMilliseconds(int speed, uint32_t time);
+    void moveUntilLine(int speed, uint32_t deltaTime = 0);
+    void moveUntilLine(int leftSpeed, int rightSpeed, uint32_t deltaTime = 0);
+    void rotateUntilLine(int speed, bool isRightHanded = true);
+    void lineCalibrate(int cnt_of_lines_per_one_rotate);
     // void objectCalibrate();
     void stop();
+};
+
+
+class WallFollower {
+private:
+    NikiMotors* motors;
+    LineSensors* sensors;
+    Sonic* sonic;
+
+public:
+    WallFollower(NikiMotors* motors, LineSensors* sensors, Sonic* sonic);
+    void followWall(int speed, float distance, float k = 1);
+    void followUntilLine(int speed, float distance, float k, uint32_t deltaTime = 0);
 };
 
 

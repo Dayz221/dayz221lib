@@ -230,11 +230,21 @@ void LineSensors::debug() {
     Serial.println();
     Serial.print("Error: ");
     Serial.println(this->getError());
-    Serial.println("");
+    Serial.print("Count: ");
+    Serial.println(this->getCount());
 }
 
 LineSensor* LineSensors::operator[] (int id) {
     return sensors[id];
+}
+
+int LineSensors::getCount() {
+    bool data[4]; int cnt = 0;
+    this->getArray(data);
+    for (int i = 0; i < this->count; i++) {
+        cnt += (int)data[i];
+    }
+    return cnt;
 }
 
 
@@ -244,9 +254,26 @@ LineFollower::LineFollower(NikiMotors* motors, LineSensors* sensors) {
 }
 
 void LineFollower::follow(int speed, float k = 1.0) {
-    float err = sensors->getError();
-    if (err == -2) motors->stop();
-    else motors->move((int)((float)speed*(1-err*k)), (int)((float)speed*(1+err*k)));
+    if (this->sensors->count == 4) {
+        float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
+        int error = this->sensors->getError4();
+        
+        while(true){
+            if (error > 0) {
+                this->motors->move((1.0-delta_power[error-1])*speed, (1.0+delta_power[error-1])*speed);
+            } else if (error < 0) {
+                this->motors->move((1.0+delta_power[(-error)-1])*speed, (1.0-delta_power[(-error)-1])*speed);
+            } else {
+                this->motors->move(speed);
+            }
+
+            error = this->sensors->getError4();
+        }
+    } else {
+        float err = sensors->getError();
+        if (err == -2) motors->stop();
+        else motors->move((int)((float)speed*(1-err*k)), (int)((float)speed*(1+err*k)));
+    }
 }
 
 void LineFollower::followUntilCrossroad(int speed, uint32_t deltaTime = 0) {
@@ -289,6 +316,26 @@ void LineFollower::stop() {
     motors->stop();
 }
 
+void LineFollower::followMilliseconds(int speed, uint32_t time) {
+    float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
+    int error = this->sensors->getError4();
+    uint32_t timer = millis();
+     
+    while(millis() - timer < time) {
+        if (error > 0) {
+            this->motors->move((1.0-delta_power[error-1])*speed, (1.0+delta_power[error-1])*speed);
+        } else if (error < 0) {
+            this->motors->move((1.0+delta_power[(-error)-1])*speed, (1.0-delta_power[(-error)-1])*speed);
+        } else {
+            this->motors->move(speed);
+        }
+
+        error = this->sensors->getError4();
+    }
+
+    this->motors->stop();
+}
+
 void LineFollower::lineCalibrate(int cnt0) {
     static uint32_t time = millis();
     uint32_t timeOfOneRotate = 0;
@@ -311,6 +358,52 @@ void LineFollower::lineCalibrate(int cnt0) {
 
     this->motors->stop();
     this->motors->setTimeOfOneRotate(timeOfOneRotate);
+}
+
+void LineFollower::moveUntilLine(int leftSpeed, int rightSpeed, uint32_t deltaTime = 0) {
+    this->motors->move(leftSpeed, rightSpeed);
+    while (this->sensors->getCount() < 2);
+    this->motors->moveMilliseconds(leftSpeed, rightSpeed, deltaTime);
+}
+
+void LineFollower::moveUntilLine(int speed, uint32_t deltaTime = 0) {
+    this->moveUntilLine(speed, speed, deltaTime);
+}
+
+void LineFollower::rotateUntilLine(int speed, bool isRightHanded = true) {
+    if (isRightHanded) speed = abs(speed);
+    else speed = -abs(speed);
+    this->motors->move(-speed, speed);
+    int data = this->sensors->getBin();
+    while (data != 0b0110) {
+        data = this->sensors->getBin();
+    };
+    this->motors->stop();
+}
+
+
+WallFollower::WallFollower(NikiMotors* motors, LineSensors* sensors, Sonic* sonic) {
+    this->motors = motors;
+    this->sonic = sonic;
+    this->sensors = sensors;
+}
+
+void WallFollower::followWall(int speed, float distance, float k = 1) {
+    float cur_dist = sonic->getDist();
+    float delta = distance - cur_dist;
+    float koeff = max(-1, min(1, delta*k));
+    this->motors->move(speed*(1-koeff), speed*(1+koeff));
+}
+
+void WallFollower::followUntilLine(int speed, float distance, float k, uint32_t deltaTime = 0) {
+    while (this->sensors->getCount() < 2) {
+        this->followWall(speed, distance, k);
+    }
+    uint32_t timer = millis();
+    while (millis() - timer < deltaTime) {
+        this->followWall(speed, distance, k);
+    }
+    this->motors->stop();
 }
 
 
