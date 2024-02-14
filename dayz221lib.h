@@ -81,8 +81,8 @@ private:
 public:
     LineFollower(NikiMotors* motors, LineSensors* sensors);
     void follow(int speed, float k = 1.0);
-    void followUntilLineEnd(int speed, uint32_t deltaTime);
-    void followUntilCrossroad(int speed, uint32_t deltaTime);
+    void followUntilLineEnd(int speed, uint32_t deltaTime = 0);
+    void followUntilCrossroad(int speed, uint32_t deltaTime = 0);
     // void rotateUntilLine(int speed);
     void lineCalibrate(int angle);
     // void objectCalibrate();

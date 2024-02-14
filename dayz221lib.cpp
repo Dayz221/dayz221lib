@@ -249,7 +249,7 @@ void LineFollower::follow(int speed, float k = 1.0) {
     else motors->move((int)((float)speed*(1-err*k)), (int)((float)speed*(1+err*k)));
 }
 
-void LineFollower::followUntilCrossroad(int speed, uint32_t deltaTime) {
+void LineFollower::followUntilCrossroad(int speed, uint32_t deltaTime = 0) {
     float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
     int error = this->sensors->getError4();
      
@@ -267,7 +267,7 @@ void LineFollower::followUntilCrossroad(int speed, uint32_t deltaTime) {
     this->motors->moveMilliseconds(speed, deltaTime);
 }
 
-void LineFollower::followUntilLineEnd(int speed, uint32_t deltaTime) {
+void LineFollower::followUntilLineEnd(int speed, uint32_t deltaTime = 0) {
     float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
     int error = this->sensors->getError4();
      
