@@ -82,8 +82,9 @@ void NikiMotors::moveMilliseconds(int speed, uint32_t time) {
 }
 
 void NikiMotors::rotate(int degs, int speed = 0) {
-    if (speed == 0) speed = initialSpeed;
-    uint32_t time_of_rotate = ((float)abs(degs)/360.0)*((float)initialSpeed/speed)*timeOfOneRotate;
+    if (speed == 0) speed = abs(initialSpeed);
+    speed = abs(speed);
+    uint32_t time_of_rotate = ((float)abs(degs)/360.0)*((float)abs(initialSpeed)/speed)*timeOfOneRotate;
     if (degs > 0) this->moveMilliseconds(-speed, speed, time_of_rotate);
     else this->moveMilliseconds(speed, -speed, time_of_rotate);
 }
@@ -248,7 +249,7 @@ void LineFollower::follow(int speed, float k = 1.0) {
     else motors->move((int)((float)speed*(1-err*k)), (int)((float)speed*(1+err*k)));
 }
 
-void LineFollower::followUntilCrossroad(int speed) {
+void LineFollower::followUntilCrossroad(int speed, uint32_t deltaTime) {
     float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
     int error = this->sensors->getError4();
      
@@ -263,10 +264,10 @@ void LineFollower::followUntilCrossroad(int speed) {
 
         error = this->sensors->getError4();
     }
-    this->motors->moveMilliseconds(speed, 500);
+    this->motors->moveMilliseconds(speed, deltaTime);
 }
 
-void LineFollower::followUntilLineEnd(int speed) {
+void LineFollower::followUntilLineEnd(int speed, uint32_t deltaTime) {
     float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
     int error = this->sensors->getError4();
      
@@ -281,7 +282,7 @@ void LineFollower::followUntilLineEnd(int speed) {
 
         error = this->sensors->getError4();
     }
-    this->motors->moveMilliseconds(speed, 500);
+    this->motors->moveMilliseconds(speed, deltaTime);
 }
 
 void LineFollower::stop() {
