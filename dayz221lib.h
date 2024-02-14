@@ -106,10 +106,10 @@ class WallFollower {
 private:
     NikiMotors* motors;
     LineSensors* sensors;
-    Sonic* sonic;
+    IRSensor* sonic;
 
 public:
-    WallFollower(NikiMotors* motors, LineSensors* sensors, Sonic* sonic);
+    WallFollower(NikiMotors* motors, LineSensors* sensors, IRSensor* sonic);
     void followWall(int speed, float distance, float k = 1);
     void followUntilLine(int speed, float distance, float k, uint32_t deltaTime = 0);
 };

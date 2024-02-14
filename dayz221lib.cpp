@@ -393,7 +393,7 @@ void LineFollower::rotateUntilLine(int speed, bool isRightHanded = true) {
 }
 
 
-WallFollower::WallFollower(NikiMotors* motors, LineSensors* sensors, Sonic* sonic) {
+WallFollower::WallFollower(NikiMotors* motors, LineSensors* sensors, IRSensor* sonic) {
     this->motors = motors;
     this->sonic = sonic;
     this->sensors = sensors;
