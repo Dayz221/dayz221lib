@@ -116,6 +116,17 @@ float Sonic::getDist() {
 }
 
 
+IRSensor::IRSensor(int pin) {
+    this->pin = pin;
+}
+
+float IRSensor::getDist() {
+    float volts = analogRead(pin)*0.0048828125;
+    float distance = 32*pow(volts, -1.10);
+    return distance;
+}
+
+
 LineSensor::LineSensor(int pin) {
     this->pin = pin;
     pinMode(pin, INPUT);
@@ -437,4 +448,156 @@ bool Timer::get(uint32_t delta) {
         return true;
     }
     return false;
+}
+
+
+void END() {
+    tone(A0,LA3,Q);
+    delay(1+Q); //delay duration should always be 1 ms more than the note in order to separate them.
+    tone(A0,LA3,Q);
+    delay(1+Q);
+    tone(A0,LA3,Q);
+    delay(1+Q);
+    tone(A0,F3,E+S);
+    delay(1+E+S);
+    tone(A0,C4,S);
+    delay(1+S);
+
+    tone(A0,LA3,Q);
+    delay(1+Q);
+    tone(A0,F3,E+S);
+    delay(1+E+S);
+    tone(A0,C4,S);
+    delay(1+S);
+    tone(A0,LA3,H);
+    delay(1+H);
+
+    tone(A0,E4,Q);
+    delay(1+Q);
+    tone(A0,E4,Q);
+    delay(1+Q);
+    tone(A0,E4,Q);
+    delay(1+Q);
+    tone(A0,F4,E+S);
+    delay(1+E+S);
+    tone(A0,C4,S);
+    delay(1+S);
+
+    tone(A0,Ab3,Q);
+    delay(1+Q);
+    tone(A0,F3,E+S);
+    delay(1+E+S);
+    tone(A0,C4,S);
+    delay(1+S);
+    tone(A0,LA3,H);
+    delay(1+H);
+
+    tone(A0,LA4,Q);
+    delay(1+Q);
+    tone(A0,LA3,E+S);
+    delay(1+E+S);
+    tone(A0,LA3,S);
+    delay(1+S);
+    tone(A0,LA4,Q);
+    delay(1+Q);
+    tone(A0,Ab4,E+S);
+    delay(1+E+S);
+    tone(A0,G4,S);
+    delay(1+S);
+
+    tone(A0,Gb4,S);
+    delay(1+S);
+    tone(A0,E4,S);
+    delay(1+S);
+    tone(A0,F4,E);
+    delay(1+E);
+    delay(1+E);//PAUSE
+    tone(A0,Bb3,E);
+    delay(1+E);
+    tone(A0,Eb4,Q);
+    delay(1+Q);
+    tone(A0,D4,E+S);
+    delay(1+E+S);
+    tone(A0,Db4,S);
+    delay(1+S);
+
+    tone(A0,C4,S);
+    delay(1+S);
+    tone(A0,B3,S);
+    delay(1+S);
+    tone(A0,C4,E);
+    delay(1+E);
+    delay(1+E);//PAUSE QUASI FINE RIGA
+    tone(A0,F3,E);
+    delay(1+E);
+    tone(A0,Ab3,Q);
+    delay(1+Q);
+    tone(A0,F3,E+S);
+    delay(1+E+S);
+    tone(A0,LA3,S);
+    delay(1+S);
+
+    tone(A0,C4,Q);
+    delay(1+Q);
+     tone(A0,LA3,E+S);
+    delay(1+E+S);
+    tone(A0,C4,S);
+    delay(1+S);
+    tone(A0,E4,H);
+    delay(1+H);
+  tone(A0,LA4,Q);
+    delay(1+Q);
+    tone(A0,LA3,E+S);
+    delay(1+E+S);
+    tone(A0,LA3,S);
+    delay(1+S);
+    tone(A0,LA4,Q);
+    delay(1+Q);
+    tone(A0,Ab4,E+S);
+    delay(1+E+S);
+    tone(A0,G4,S);
+    delay(1+S);
+
+    tone(A0,Gb4,S);
+    delay(1+S);
+    tone(A0,E4,S);
+    delay(1+S);
+    tone(A0,F4,E);
+    delay(1+E);
+    delay(1+E);//PAUSE
+    tone(A0,Bb3,E);
+    delay(1+E);
+    tone(A0,Eb4,Q);
+    delay(1+Q);
+    tone(A0,D4,E+S);
+    delay(1+E+S);
+    tone(A0,Db4,S);
+    delay(1+S);
+
+    tone(A0,C4,S);
+    delay(1+S);
+    tone(A0,B3,S);
+    delay(1+S);
+    tone(A0,C4,E);
+    delay(1+E);
+    delay(1+E);//PAUSE QUASI FINE RIGA
+    tone(A0,F3,E);
+    delay(1+E);
+    tone(A0,Ab3,Q);
+    delay(1+Q);
+    tone(A0,F3,E+S);
+    delay(1+E+S);
+    tone(A0,C4,S);
+    delay(1+S);
+
+    tone(A0,LA3,Q);
+    delay(1+Q);
+     tone(A0,F3,E+S);
+    delay(1+E+S);
+    tone(A0,C4,S);
+    delay(1+S);
+    tone(A0,LA3,H);
+    delay(1+H);
+
+    delay(2*H);
 }
