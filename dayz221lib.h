@@ -90,12 +90,12 @@ private:
 public:
     LineFollower(NikiMotors* motors, LineSensors* sensors);
     void follow(int speed, float k = 1.0);
-    void followUntilLineEnd(int speed, uint32_t deltaTime = 0);
-    void followUntilCrossroad(int speed, uint32_t deltaTime = 0);
+    uint32_t followUntilLineEnd(int speed, uint32_t deltaTime = 0);
+    uint32_t followUntilCrossroad(int speed, uint32_t deltaTime = 0);
     void followMilliseconds(int speed, uint32_t time);
-    void moveUntilLine(int speed, uint32_t deltaTime = 0);
-    void moveUntilLine(int leftSpeed, int rightSpeed, uint32_t deltaTime = 0);
-    void rotateUntilLine(int speed, bool isRightHanded = true);
+    uint32_t moveUntilLine(int speed, uint32_t deltaTime = 0);
+    uint32_t moveUntilLine(int leftSpeed, int rightSpeed, uint32_t deltaTime = 0);
+    uint32_t rotateUntilLine(int speed, bool isRightHanded = true);
     void lineCalibrate(int cnt_of_lines_per_one_rotate);
     // void objectCalibrate();
     void stop();
@@ -111,7 +111,7 @@ private:
 public:
     WallFollower(NikiMotors* motors, LineSensors* sensors, IRSensor* sonic);
     void followWall(int speed, float distance, float k = 1);
-    void followUntilLine(int speed, float distance, float k, uint32_t deltaTime = 0);
+    uint32_t followUntilLine(int speed, float distance, float k, uint32_t deltaTime = 0);
 };
 
 

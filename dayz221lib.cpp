@@ -288,7 +288,8 @@ void LineFollower::follow(int speed, float k = 1.0) {
     }
 }
 
-void LineFollower::followUntilCrossroad(int speed, uint32_t deltaTime = 0) {
+uint32_t LineFollower::followUntilCrossroad(int speed, uint32_t deltaTime = 0) {
+    uint32_t start = millis();
     float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
     int error = this->sensors->getError4();
      
@@ -304,10 +305,13 @@ void LineFollower::followUntilCrossroad(int speed, uint32_t deltaTime = 0) {
         error = this->sensors->getError4();
     }
     this->motors->moveMilliseconds(speed, deltaTime);
+    uint32_t end = millis();
     delay(100);
+    return end-start;
 }
 
-void LineFollower::followUntilLineEnd(int speed, uint32_t deltaTime = 0) {
+uint32_t LineFollower::followUntilLineEnd(int speed, uint32_t deltaTime = 0) {
+    uint32_t start = millis();
     float delta_power[4] = {0.2, 0.45, 0.8, 0.95};
     int error = this->sensors->getError4();
      
@@ -323,7 +327,9 @@ void LineFollower::followUntilLineEnd(int speed, uint32_t deltaTime = 0) {
         error = this->sensors->getError4();
     }
     this->motors->moveMilliseconds(speed, deltaTime);
+    uint32_t end = millis();
     delay(100);
+    return end-start;
 }
 
 void LineFollower::stop() {
@@ -376,17 +382,22 @@ void LineFollower::lineCalibrate(int cnt0) {
     delay(100);
 }
 
-void LineFollower::moveUntilLine(int leftSpeed, int rightSpeed, uint32_t deltaTime = 0) {
+uint32_t LineFollower::moveUntilLine(int leftSpeed, int rightSpeed, uint32_t deltaTime = 0) {
+    uint32_t start = millis();
     this->motors->move(leftSpeed, rightSpeed);
     while (this->sensors->getCount() < 2);
     this->motors->moveMilliseconds(leftSpeed, rightSpeed, deltaTime);
+    uint32_t end = millis();
+    delay(100);
+    return end-start;
 }
 
-void LineFollower::moveUntilLine(int speed, uint32_t deltaTime = 0) {
-    this->moveUntilLine(speed, speed, deltaTime);
+uint32_t LineFollower::moveUntilLine(int speed, uint32_t deltaTime = 0) {
+    return this->moveUntilLine(speed, speed, deltaTime);
 }
 
-void LineFollower::rotateUntilLine(int speed, bool isRightHanded = true) {
+uint32_t LineFollower::rotateUntilLine(int speed, bool isRightHanded = true) {
+    uint32_t start = millis();
     if (isRightHanded) speed = abs(speed);
     else speed = -abs(speed);
     this->motors->move(-speed, speed);
@@ -395,6 +406,7 @@ void LineFollower::rotateUntilLine(int speed, bool isRightHanded = true) {
         data = this->sensors->getBin();
     };
     this->motors->stop();
+    return millis() - start;
 }
 
 
@@ -411,7 +423,8 @@ void WallFollower::followWall(int speed, float distance, float k = 1) {
     this->motors->move(speed*(1-koeff), speed*(1+koeff));
 }
 
-void WallFollower::followUntilLine(int speed, float distance, float k, uint32_t deltaTime = 0) {
+uint32_t WallFollower::followUntilLine(int speed, float distance, float k, uint32_t deltaTime = 0) {
+    uint32_t start = millis();
     while (this->sensors->getCount() < 2) {
         this->followWall(speed, distance, k);
     }
@@ -420,7 +433,9 @@ void WallFollower::followUntilLine(int speed, float distance, float k, uint32_t 
         this->followWall(speed, distance, k);
     }
     this->motors->stop();
+    uint32_t end = millis();
     delay(100);
+    return end - start;
 }
 
 
