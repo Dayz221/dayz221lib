@@ -202,7 +202,7 @@ int LineSensors::getError4() {
     for(int i = 0; i < 4; i++){
         count_lines += ((sensor_state[i])? 1:0);
     }
-    if(count_lines >= 3){
+    if(count_lines > 3){
       return 5; // CROSSROAD;
     }
 
