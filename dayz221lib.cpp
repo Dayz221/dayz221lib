@@ -75,6 +75,7 @@ void NikiMotors::moveMilliseconds(int leftSpeed, int rightSpeed, uint32_t time) 
     this->move(leftSpeed, rightSpeed);
     while (millis() - timer < time);
     this->stop();
+    delay(100);
 }
 
 void NikiMotors::moveMilliseconds(int speed, uint32_t time) {
@@ -303,6 +304,7 @@ void LineFollower::followUntilCrossroad(int speed, uint32_t deltaTime = 0) {
         error = this->sensors->getError4();
     }
     this->motors->moveMilliseconds(speed, deltaTime);
+    delay(100);
 }
 
 void LineFollower::followUntilLineEnd(int speed, uint32_t deltaTime = 0) {
@@ -321,6 +323,7 @@ void LineFollower::followUntilLineEnd(int speed, uint32_t deltaTime = 0) {
         error = this->sensors->getError4();
     }
     this->motors->moveMilliseconds(speed, deltaTime);
+    delay(100);
 }
 
 void LineFollower::stop() {
@@ -345,6 +348,7 @@ void LineFollower::followMilliseconds(int speed, uint32_t time) {
     }
 
     this->motors->stop();
+    delay(100);
 }
 
 void LineFollower::lineCalibrate(int cnt0) {
@@ -369,6 +373,7 @@ void LineFollower::lineCalibrate(int cnt0) {
 
     this->motors->stop();
     this->motors->setTimeOfOneRotate(timeOfOneRotate);
+    delay(100);
 }
 
 void LineFollower::moveUntilLine(int leftSpeed, int rightSpeed, uint32_t deltaTime = 0) {
@@ -415,6 +420,7 @@ void WallFollower::followUntilLine(int speed, float distance, float k, uint32_t 
         this->followWall(speed, distance, k);
     }
     this->motors->stop();
+    delay(100);
 }
 
 
